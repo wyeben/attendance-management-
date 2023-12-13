@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.css">
+  <title>Update User</title>
+</head>
+<body>
+  <h2>Update</h2>
+  <form id="deleteForm">
+    <input type="text" id="userId" name="userId" placeholder="Enter User's ID" required>
+    <input type="text" id="userId" name="userId" placeholder="Enter User's Fisrt Name" required>
+    <input type="text" id="userId" name="userId" placeholder="Enter new name" required>
+    <button type="submit">Update</button>
+    <button id="goBack">Go back</button>
+  </form>
+
+  <script>
+    const backendUrl = "http://localhost:1990/attendance-management/update-user";
+
+document.getElementById('deleteForm').addEventListener('submit', (event) => {
+    event.preventDefault(); 
+    const userIdToDelete = document.getElementById('userId').value;
+
+    fetch(`${backendUrl}/${userIdToDelete}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('HTTP error, status = ' + response.status);
+        }
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {  
+            return response.json();
+        } else {
+            return 'User updated successfully';
+        }
+    })
+    .then(data => {
+        console.log('Success:', data);
+        if (typeof data === 'string') {
+            alert(data); 
+        } else {
+            alert('User updated successfully');
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Error updated user: ' + error.message);
+    });
+});
+
+document.getElementById('goBack').addEventListener('click', () => {
+    window.location.href = "../index.html"
+})
+
+  </script>
+</body>
+</html>

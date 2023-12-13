@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <h1 class="header"><span class="head2">Registered Names</span></h1>
+  <div id="users-container"></div>
+
+  <script>
+    async function displayUsers() {
+      try {
+        const response = await fetch('http://localhost:1990/attendance-management/users'); 
+        const data = await response.json();
+
+        const usersContainer = document.getElementById('users-container');
+        usersContainer.innerHTML = '';
+
+        data.forEach(user => {
+          const userDiv = document.createElement('div');
+          userDiv.classList.add('user-item');
+
+          const fullName = `Name: ${user.firstName} ${user.lastName}`;
+          const userId = `Id: ${user.userId}`;
+          const userStatus = `Status: ${user.status}`;
+          const registerDate = `Date: ${user.date}`;
+
+          const userDetails = document.createElement('p');
+          userDetails.textContent = `${fullName} <=> ${userStatus} <=> ${registerDate} <=> ${userId}`;
+
+          userDiv.appendChild(userDetails);
+          usersContainer.appendChild(userDiv);
+        });
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    }
+
+    window.onload = displayUsers();
+
+  </script>
+  <div class="vv">
+    <a href="../index.html"><button class="alist-btn">Go Back</button></a>
+  </div>
+</body>
+</html>

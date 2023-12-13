@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delete User</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <h2>Delete User</h2>
+  <form id="deleteForm">
+    <input type="text" id="userId" name="userId" placeholder="Enter User ID to Delete" required>
+    <button type="submit">Delete</button>
+    <button id="goBack">Go back</button>
+  </form>
+  
+
+  <script>
+    const backendUrl = "http://localhost:1990/attendance-management/delete"; 
+
+document.getElementById('deleteForm').addEventListener('submit', (event) => {
+    event.preventDefault(); 
+    const userIdToDelete = document.getElementById('userId').value;
+
+    fetch(`${backendUrl}/${userIdToDelete}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('HTTP error, status = ' + response.status);
+        }
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return response.json();
+        } else {
+            return 'User deleted successfully';
+        }
+    })
+    .then(data => {
+        console.log('Success:', data);
+        if (typeof data === 'string') {
+            alert(data); 
+        } else {
+            alert('User deleted successfully'); 
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Error deleting user: ' + error.message);
+    });
+});
+
+document.getElementById('goBack').addEventListener('click', () => {
+    window.location.href = "../index.html"
+})
+
+  </script>
+</body>
+</html>
